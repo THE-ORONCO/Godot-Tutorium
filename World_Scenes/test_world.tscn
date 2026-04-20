@@ -1,0 +1,44 @@
+[gd_scene format=4 uid="uid://dwqdq1i68lymd"]
+
+[ext_resource type="Script" uid="uid://vn82kqe1gjb5" path="res://World_Scenes/test_world.gd" id="1_6v2v3"]
+[ext_resource type="PackedScene" uid="uid://kq8dj6c61dva" path="res://Entities/player_character.tscn" id="1_upfsg"]
+[ext_resource type="Texture2D" uid="uid://dwj0rjkh6hgc3" path="res://icon.svg" id="2_6v2v3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nvvut"]
+size = Vector2(124, 104)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6v2v3"]
+texture = ExtResource("2_6v2v3")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+1:1/0 = 0
+1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+0:1/0 = 0
+0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+
+[sub_resource type="TileSet" id="TileSet_nvvut"]
+tile_size = Vector2i(64, 64)
+physics_layer_0/collision_layer = 1
+physics_layer_0/collision_mask = 0
+sources/2 = SubResource("TileSetAtlasSource_6v2v3")
+
+[node name="Test_World" type="Node2D" unique_id=867910321]
+script = ExtResource("1_6v2v3")
+
+[node name="Player_Character" parent="." unique_id=739952251 instance=ExtResource("1_upfsg")]
+position = Vector2(280, 111)
+
+[node name="Area2D" type="Area2D" parent="." unique_id=986628825]
+position = Vector2(462, 76)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=478149986]
+shape = SubResource("RectangleShape2D_nvvut")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=598263347]
+tile_map_data = PackedByteArray("AAD8/wIAAgAAAAAAAAD9/wIAAgAAAAAAAAD+/wIAAgAAAAAAAAD//wIAAgAAAAAAAAAAAAIAAgAAAAAAAAABAAIAAgABAAAAAAACAAIAAgABAAAAAAACAAMAAgABAAAAAAACAAQAAgAAAAEAAAADAAQAAgABAAAAAAD+/wQAAgABAAEAAAD//wQAAgABAAEAAAD//wUAAgABAAEAAAAAAAUAAgABAAEAAAABAAUAAgABAAEAAAACAAYAAgABAAEAAAADAAYAAgABAAEAAAAEAAYAAgABAAEAAAAFAAYAAgABAAEAAAAFAAUAAgABAAEAAAD8/wQAAgAAAAEAAAD9/wMAAgAAAAEAAAD+/wMAAgAAAAEAAAD//wMAAgAAAAEAAAAAAAMAAgAAAAEAAAAAAAQAAgAAAAEAAAABAAQAAgAAAAEAAAADAAUAAgAAAAEAAAADAAMAAgAAAAEAAAAEAAMAAgAAAAEAAAAFAAMAAgAAAAEAAAAGAAMAAgAAAAEAAAAHAAMAAgAAAAEAAAAIAAMAAgAAAAEAAAAJAAMAAgAAAAEAAADz/wYAAgAAAAAAAADz/wcAAgAAAAEAAAD0/wYAAgABAAAAAAD0/wcAAgABAAEAAAA=")
+tile_set = SubResource("TileSet_nvvut")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

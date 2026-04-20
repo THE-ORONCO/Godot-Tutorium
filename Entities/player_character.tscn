@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://kq8dj6c61dva"]
+
+[ext_resource type="Script" uid="uid://du51tbq37nnx4" path="res://Scripts/player_character.gd" id="1_ko2ca"]
+[ext_resource type="Texture2D" uid="uid://dwj0rjkh6hgc3" path="res://icon.svg" id="2_dl8lq"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dl8lq"]
+radius = 12.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ko2ca"]
+radius = 25.079872
+
+[node name="Player_Character" type="CharacterBody2D" unique_id=2012819467 groups=["Player"]]
+script = ExtResource("1_ko2ca")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1348647216]
+shape = SubResource("CircleShape2D_dl8lq")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=2097418619]
+rotation = 1.5707964
+scale = Vector2(0.31566805, 0.3156681)
+texture = ExtResource("2_dl8lq")
+
+[node name="StinkyRadius" type="Area2D" parent="." unique_id=1804615806]
+unique_name_in_owner = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StinkyRadius" unique_id=944905554]
+shape = SubResource("CircleShape2D_ko2ca")

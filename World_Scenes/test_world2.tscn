@@ -1,0 +1,24 @@
+[gd_scene format=4 uid="uid://jeoyriukwljx"]
+
+[ext_resource type="PackedScene" uid="uid://kq8dj6c61dva" path="res://Entities/player_character.tscn" id="2_syuhu"]
+[ext_resource type="Texture2D" uid="uid://dwj0rjkh6hgc3" path="res://icon.svg" id="3_qhoq7"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qrr0m"]
+texture = ExtResource("3_qhoq7")
+texture_region_size = Vector2i(128, 128)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
+
+[sub_resource type="TileSet" id="TileSet_6v2v3"]
+tile_size = Vector2i(128, 128)
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_qrr0m")
+
+[node name="Test_World2" type="Node2D" unique_id=867910321]
+
+[node name="Player_Character" parent="." unique_id=739952251 instance=ExtResource("2_syuhu")]
+position = Vector2(280, 111)
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1158152235]
+tile_map_data = PackedByteArray("AAADAAIAAAAAAAAAAAABAAEAAAAAAAAAAAACAAEAAAAAAAAAAAADAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAABAAIAAAAAAAAAAAACAAIAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_6v2v3")
