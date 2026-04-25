@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://c072kcew5dbuy"]
+
+[ext_resource type="Script" uid="uid://bolu82svu8hmc" path="res://Scripts/grounded_enemy.gd" id="1_1egqo"]
+[ext_resource type="Texture2D" uid="uid://dwj0rjkh6hgc3" path="res://icon.svg" id="1_aefuq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1egqo"]
+size = Vector2(37, 35)
+
+[node name="groundd_enemy" type="CharacterBody2D" unique_id=1635358359]
+script = ExtResource("1_1egqo")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=112428043]
+scale = Vector2(0.3125, 0.3125)
+texture = ExtResource("1_aefuq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1025781190]
+shape = SubResource("RectangleShape2D_1egqo")
+
+[node name="Timer" type="Timer" parent="." unique_id=639720976]
+wait_time = 3.0
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

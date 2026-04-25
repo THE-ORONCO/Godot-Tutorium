@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://cnp80qdxi62sb"]
+
+[ext_resource type="Script" uid="uid://ci0pnonoumrk0" path="res://Scripts/global_thingy.gd" id="1_bwi6j"]
+
+[node name="GlobalThingy" type="Node2D" unique_id=1463509292]
+script = ExtResource("1_bwi6j")
+
+[node name="Timer" type="Timer" parent="." unique_id=658388415]
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://vn82kqe1gjb5" path="res://World_Scenes/test_world.gd" id="1_6v2v3"]
 [ext_resource type="PackedScene" uid="uid://kq8dj6c61dva" path="res://Entities/player_character.tscn" id="1_upfsg"]
 [ext_resource type="Texture2D" uid="uid://dwj0rjkh6hgc3" path="res://icon.svg" id="2_6v2v3"]
+[ext_resource type="PackedScene" uid="uid://c072kcew5dbuy" path="res://Entities/grounded_enemy.tscn" id="4_nvvut"]
+[ext_resource type="Script" uid="uid://xhw720rlg4yk" path="res://World_Scenes/sprite_2d_2.gd" id="5_tsnw3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nvvut"]
 size = Vector2(124, 104)
@@ -25,6 +27,26 @@ physics_layer_0/collision_layer = 1
 physics_layer_0/collision_mask = 0
 sources/2 = SubResource("TileSetAtlasSource_6v2v3")
 
+[sub_resource type="Curve2D" id="Curve2D_nvvut"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 268, 78, 0, 0, 0, 0, 223, 18, 0, 0, 0, 0, 109, 56, 0, 0, 0, 0, 0, 0)
+}
+point_count = 4
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_nvvut"]
+load_path = "res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_tsnw3"]
+load_path = "res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex"
+
+[sub_resource type="AnimatedTexture" id="AnimatedTexture_nvvut"]
+frames = 2
+frame_0/texture = SubResource("CompressedTexture2D_nvvut")
+frame_1/texture = SubResource("CompressedTexture2D_tsnw3")
+frame_1/duration = 1.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tsnw3"]
+
 [node name="Test_World" type="Node2D" unique_id=867910321]
 script = ExtResource("1_6v2v3")
 
@@ -41,4 +63,32 @@ shape = SubResource("RectangleShape2D_nvvut")
 tile_map_data = PackedByteArray("AAD8/wIAAgAAAAAAAAD9/wIAAgAAAAAAAAD+/wIAAgAAAAAAAAD//wIAAgAAAAAAAAAAAAIAAgAAAAAAAAABAAIAAgABAAAAAAACAAIAAgABAAAAAAACAAMAAgABAAAAAAACAAQAAgAAAAEAAAADAAQAAgABAAAAAAD+/wQAAgABAAEAAAD//wQAAgABAAEAAAD//wUAAgABAAEAAAAAAAUAAgABAAEAAAABAAUAAgABAAEAAAACAAYAAgABAAEAAAADAAYAAgABAAEAAAAEAAYAAgABAAEAAAAFAAYAAgABAAEAAAAFAAUAAgABAAEAAAD8/wQAAgAAAAEAAAD9/wMAAgAAAAEAAAD+/wMAAgAAAAEAAAD//wMAAgAAAAEAAAAAAAMAAgAAAAEAAAAAAAQAAgAAAAEAAAABAAQAAgAAAAEAAAADAAUAAgAAAAEAAAADAAMAAgAAAAEAAAAEAAMAAgAAAAEAAAAFAAMAAgAAAAEAAAAGAAMAAgAAAAEAAAAHAAMAAgAAAAEAAAAIAAMAAgAAAAEAAAAJAAMAAgAAAAEAAADz/wYAAgAAAAAAAADz/wcAAgAAAAEAAAD0/wYAAgABAAAAAAD0/wcAAgABAAEAAAA=")
 tile_set = SubResource("TileSet_nvvut")
 
+[node name="groundd_enemy" parent="." unique_id=1635358359 instance=ExtResource("4_nvvut")]
+position = Vector2(57, 91)
+
+[node name="Path2D" type="Path2D" parent="." unique_id=354565594]
+curve = SubResource("Curve2D_nvvut")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Path2D" unique_id=2124309492]
+texture_repeat = 2
+position = Vector2(230, 61)
+texture = SubResource("AnimatedTexture_nvvut")
+hframes = 2
+vframes = 2
+frame = 1
+region_enabled = true
+region_rect = Rect2(0, 0, 128, 64000)
+script = ExtResource("5_tsnw3")
+
+[node name="Timer" type="Timer" parent="Path2D/Sprite2D2" unique_id=1173873694]
+wait_time = 0.2
+autostart = true
+
+[node name="Area2D" type="Area2D" parent="Path2D" unique_id=1560704054]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Path2D/Area2D" unique_id=2050154630]
+position = Vector2(207, -67)
+shape = SubResource("RectangleShape2D_tsnw3")
+
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="timeout" from="Path2D/Sprite2D2/Timer" to="Path2D/Sprite2D2" method="_on_timer_timeout"]
