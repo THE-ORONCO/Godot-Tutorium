@@ -1,3 +1,4 @@
+## This global increases the score every second
 extends Node2D
 
 

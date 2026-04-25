@@ -15,21 +15,133 @@ learn. Letting the AI solve everything does not help you learn the process. When
 
 ### Session 2
 
-- collision & layers & masks
-	- [official docs](https://docs.godotengine.org/en/stable/tutorials/physics/physics_introduction.html#collision-layers-and-masks)
-	- [video](https://www.youtube.com/watch?v=YPZQM6w7rlI)
-- scene loading
-  - via the simple `change_scene_to_file(...)`, `change_scene_to_packed(...)`, `change_scene_to_node(...)`  ([docs](https://docs.godotengine.org/en/stable/tutorials/scripting/change_scenes_manually.html))
-  - [background loading for chunk based levels](https://docs.godotengine.org/en/stable/tutorials/io/background_loading.html)
+#### Collision & Layers & Masks
+- [official docs](https://docs.godotengine.org/en/stable/tutorials/physics/physics_introduction.html#collision-layers-and-masks)
+- [video](https://www.youtube.com/watch?v=YPZQM6w7rlI)
+#### Scene Loading
+- via the simple `change_scene_to_file(...)`, `change_scene_to_packed(...)`,
+  `change_scene_to_node(...)`  ([docs](https://docs.godotengine.org/en/stable/tutorials/scripting/change_scenes_manually.html))
+- [background loading for chunk based levels](https://docs.godotengine.org/en/stable/tutorials/io/background_loading.html)
 
 ### Session 3
 
-- git
+#### Globals / Autoloads
+
+- if you ever need things to be available everywhere, at any time and have them not reset when changing scenes, use
+  autoloads 
+  - [godot docs about autoloads](https://docs.godotengine.org/en/stable/tutorials/scripting/singletons_autoload.html)
+  - these can be both a script or a complete scene
+	- scripts are useful for simple things like counters, constants, or utility functions
+	- scenes are useful for complex things like managers, UI, or game states
+- we created an example implementation in [Scripts/score_keeper.gd](Scripts/score_keeper.gd) during the tutorium session.
+
+#### Saving Loading
+
+- use [FileAccess](https://docs.godotengine.org/en/stable/classes/class_fileaccess.html) to get handles to files
+- [godot docs about the Filesystem](https://docs.godotengine.org/en/stable/tutorials/scripting/filesystem.html)
+- [loading and saving with Godot](https://docs.godotengine.org/en/stable/tutorials/io/runtime_file_loading_and_saving.html)
+	- [a blog post that has an opinion on how to do it](https://kidscancode.org/godot_recipes/4.x/basics/file_io/index.html)
+	- [a video on why JSON bad for saving](https://www.youtube.com/watch?v=yuvliTJ6ATA)
+
+You will normally need to handle 4 possible cases:
+
+|              | Read File    | Write File                                                               |
+|--------------|--------------|--------------------------------------------------------------------------|
+| File Exists  | just read it | decide if you need to update onlyt specific contents / override / append |
+| File Missing | decide       | create the file                                                          |
+
+We created an example implementation in [Scripts/score_keeper.gd](Scripts/score_keeper.gd) during the tutorium session.
+
+#### JSON
+
+JSON is a data format godot can use ([docs](https://docs.godotengine.org/en/stable/classes/class_json.html))
+
+```json
+{
+  "string_value": "cool string",
+  "int_value": 1,
+  "float_value": 1.0,
+  "bool_value": true,
+  "array_value": [
+    "value0",
+    1,
+    2.0,
+    [
+      "nested_array"
+    ]
+  ],
+  "dict_value": {
+    "nested_value": "cool value",
+    "num": 1
+  }
+}
+```
+
+##### JSON to Godot
+
+You can either directly parse the value
+
+```gdscript
+var value_to_read := """{ "string_value": "cool string", "int_value": 1 }"""
+var data = JSON.parse_string(value_to_read) # returns null if parsing failed.
+``` 
+
+Or try to handle the error
+
+```gdscript
+# retrieve data
+var value_to_read := """{ "string_value": "cool string", "int_value": 1 }"""
+var json = JSON.new()
+var error = json.parse(value_to_read)
+if error == OK: # handle the error
+	var data_received = json.data
+	if typeof(data_received) == TYPE_ARRAY: # check that the type of the loaded data is correct
+		print(data_received) # prints the array.
+	else:
+		print("Unexpected data")
+else:
+	print("JSON Parse Error: ", json.get_error_message(), " in ", value_to_read, " at line ", json.get_error_line())
+```
+
+##### Godot to JSON
+
+```gdscript
+var cool_data: Dictionary[String, Variant] = {
+		"bruh": 1,
+		"score": "2",
+	}
+var json_string = JSON.stringify(cool_data)
+```
+
+### Session 3.5
+
+- Moving Platforms
+    - you can easily create a moving platform using
+      the [AnimationPlayer](https://docs.godotengine.org/en/stable/classes/class_animationplayer.html)
+        - [sprite animations](https://docs.godotengine.org/en/stable/tutorials/2d/2d_sprite_animation.html#sprite-sheet-with-animationplayer)
+        - [cutout / puppet animations](https://docs.godotengine.org/en/stable/tutorials/animation/cutout_animation.html)
+        - you can animate almost every property in godot, this includes the position or the ratio in
+          a [Path2D](https://docs.godotengine.org/en/stable/classes/class_path2d.html)
+        - this allows for easy synchronisation of platforms if they are all managed in the same animation track
+        - this might be bad if the platforms need to move out of sync or some platforms move for a longer time than
+          others, because each animation has a fixed duration
+        - this also has the problem that you cannot see the path of the platform in the editor
+    - if you want to see the path of the platform in the editor, you can use
+      a [Path2D](https://docs.godotengine.org/en/stable/classes/class_path2d.html) and add
+      a [PathFollow2D](https://docs.godotengine.org/en/stable/classes/class_pathfollow2d.html#class-pathfollow2d) to it
+        - this is useful for debugging and visualizing the path of the platform in the editor
+        - you can live edit the path of the platform in the editor while the game is running and have the movement of
+          the platform update inside the running game without the need to restart the game
+        - when you animate the `progress_ratio` (0-1 ratio along the path) or `progress` (length in pixles) of the
+          `PathFollow2D` with an `AnimationPlayer`, you can have the best of both worlds, easy sync of the platforms, you
+          see the path of the platform and for specific platforms you can easily handle them separetly
+        - see also the example script for a self-moving platform in [Scripts/self_moving_path_follow_2d.gd](Scripts/self_moving_path_follow_2d.gd)
 
 ### Session X
 
+- git
 - C# events & Godot signals and callables
-	- signal implementation in
+    - signal implementation in
 	  godot: https://github.com/godotengine/godot/blob/3911e0963d39b79a85cb329340c6918397d2d05e/core/object/gdtype.cpp#L115
 	- signal calling in
 	  godot: https://github.com/godotengine/godot/blob/3911e0963d39b79a85cb329340c6918397d2d05e/core/object/object.cpp#L1199-L1203
